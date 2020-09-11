@@ -1,6 +1,8 @@
 FROM archlinux:latest
 LABEL maintainer "aimkiray@gmail.com"
 
+WORKDIR /
+
 ENV lotus_rep https://github.com/filecoin-project/lotus.git
 ENV branch master
 ENV commit HEAD
@@ -11,6 +13,17 @@ RUN sed '1i\Server = https://mirrors.163.com/archlinux/$repo/os/$arch' /etc/pacm
     && pacman -Syu --noconfirm wget go gcc git bzr jq pkg-config opencl-icd-loader opencl-headers base-devel \
     && pacman -Syu --noconfirm cargo rustup
 
+RUN mkdir $HOME/.cargo \
+    && echo $'[source.crates-io] \n\
+replace-with = \'ustc\' \n\n\
+[source.ustc] \n\
+registry = "git://mirrors.ustc.edu.cn/crates.io-index"' >> $HOME/.cargo/config \
+    && cat $HOME/.cargo/config \
+    && curl -sOL https://github.com/krallin/tini/releases/download/v0.19.0/tini \
+    && chmod +x tini \
+    && curl -sOL https://raw.githubusercontent.com/aimkiray/lotus-docker/master/daemon-entrypoint.sh \
+    && chmod +x daemon-entrypoint.sh
+
 RUN git clone --depth=1 -b $branch $lotus_rep $rep_dir \
     && cd $rep_dir \
     && git checkout $commit \
@@ -19,15 +32,7 @@ RUN git clone --depth=1 -b $branch $lotus_rep $rep_dir \
     && sed -i 's/"check_cpu_for_feature": null/"check_cpu_for_feature": "sha_ni"/g' extern/filecoin-ffi/rust/rustc-target-features-optimized.json \
     && env RUSTFLAGS='-C target-cpu=native -g' FIL_PROOFS_USE_GPU_COLUMN_BUILDER=1 FIL_PROOFS_USE_GPU_TREE_BUILDER=1 FFI_BUILD_FROM_SOURCE=1 make clean all lotus-bench
 
-RUN curl -sOL https://github.com/krallin/tini/releases/download/v0.19.0/tini \
-    && chmod +x tini
-
-RUN curl -sOL https://raw.githubusercontent.com/aimkiray/lotus-docker/master/daemon-entrypoint.sh \
-    && chmod +x daemon-entrypoint.sh
-
-FROM busybox:1-glibc
-
-WORKDIR /
+FROM busybox:glibc
 
 # Certs
 COPY --from=0 /etc/ssl/certs /etc/ssl/certs
