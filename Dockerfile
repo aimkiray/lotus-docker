@@ -1,4 +1,4 @@
-FROM busybox:1-glibc
+FROM busybox:glibc
 LABEL maintainer "aimkiray@gmail.com"
 
 WORKDIR /
