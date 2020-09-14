@@ -2,20 +2,12 @@
 
 set -eo pipefail
 
-curl -sOL https://github.com/krallin/tini/releases/download/v0.19.0/tini
-chmod +x tini
+# Lotus version
+lotus_version=v0.7.0
 
-mkdir -p lib
-
-cp /usr/lib/x86_64-linux-gnu/libOpenCL.so.1 lib
-cp /lib/x86_64-linux-gnu/libgcc_s.so.1 lib
-cp /lib/x86_64-linux-gnu/libdl-2.27.so lib
-cp /lib/x86_64-linux-gnu/libutil-2.27.so lib
-cp /lib/x86_64-linux-gnu/librt-2.27.so lib
-
-cp -r /etc/ssl/certs .
-
-# Get lotus version
-tag=$(./lotus --version | awk '{print $3}' | awk -F+ '{print $1}')
-
-docker build -t aimkiray/lotus:$tag -t aimkiray/lotus:latest .
+docker build \
+    -t aimkiray/lotus:$lotus_version \
+    -t aimkiray/lotus:latest \
+    --build-arg http_proxy=http://0.0.0.0:8000 \
+    --build-arg https_proxy=http://0.0.0.0:8000 \
+    .
