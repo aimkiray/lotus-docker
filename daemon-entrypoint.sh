@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $0 is a script name
 # $1 is command
 # $2, $3 etc are passed arguments
