@@ -22,7 +22,6 @@ ENV raw_url=https://raw.excited.workers.dev/https://raw.githubusercontent.com
 ENV lotus_rep=${git_url}/filecoin-project/lotus.git
 ENV branch=master
 ENV git_tag=v0.7.0
-ENV rep_dir=lotus-$git_tag
 ENV GOPROXY=https://goproxy.cn,direct
 
 ENV tini_url=${git_url}/krallin/tini/releases/download/v0.19.0/tini
@@ -38,18 +37,15 @@ registry = 'git://mirrors.ustc.edu.cn/crates.io-index'" >> $HOME/.cargo/config \
     && chmod +x daemon-entrypoint.sh
 
 RUN export PATH=$PATH:/usr/local/go/bin:$HOME/.cargo/bin \
-    && git clone --depth=1 -b $branch $lotus_rep $rep_dir \
-    && cd $rep_dir \
+    && git clone --depth=1 -b $branch $lotus_rep lotus \
+    && cd lotus \
     && git fetch --tags --prune \
     && git checkout tags/$git_tag \
     && sed -i "s#https://github.com#${git_url}#g" .gitmodules \
     && env RUSTFLAGS='-C target-cpu=native -g' FIL_PROOFS_USE_GPU_COLUMN_BUILDER=1 FIL_PROOFS_USE_GPU_TREE_BUILDER=1 FFI_BUILD_FROM_SOURCE=1 make clean && make all
 
-FROM busybox/glibc
+FROM busybox:glibc
 LABEL maintainer "aimkiray@gmail.com"
-
-ENV git_tag=v0.7.0
-ENV rep_dir=lotus-$git_tag
 
 # Certs
 COPY --from=0 /etc/ssl/certs /etc/ssl/certs
@@ -60,13 +56,12 @@ COPY --from=0 /usr/lib/libutil.so /lib/libutil.so.1
 COPY --from=0 /usr/lib/librt.so /lib/librt.so.1
 COPY --from=0 /usr/lib/libgcc_s.so.1 /lib/libgcc_s.so.1
 COPY --from=0 /usr/lib/libOpenCL.so.1 /lib/libOpenCL.so.1
-COPY --from=0 /lib/libc.so.6 /lib/libc.so.6
 
 # PID1 tini
 COPY --from=0 /tini /usr/local/bin/tini
 
 # Lotus bin && entrypoint script
-COPY --from=0 ${rep_dir}/lotus /usr/local/bin/lotus
+COPY --from=0 /lotus/lotus /usr/local/bin/lotus
 COPY --from=0 /daemon-entrypoint.sh /usr/local/bin/daemon-entrypoint.sh
 
 # Lotus sync port
