@@ -1,6 +1,6 @@
 # 食用指南
 
-自动化编译打包请使用 Dockerfile-with-make。
+自动化编译打包请使用 `daemon/daemon.dockerfile`。
 
 手动构建时的目录结构如下所示。
 
