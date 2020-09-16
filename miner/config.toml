@@ -2,13 +2,13 @@
 #SealingDelay = "1h0m0s"
 #
 [API]
-  ListenAddress = "/ip4/host_ip/tcp/2345/http"
-  RemoteListenAddress = "host_ip:2345"
+  ListenAddress = "/ip4/0.0.0.0/tcp/10086/http"
+  RemoteListenAddress = "host_ip:10086"
 #  Timeout = "30s"
 #
 [Libp2p]
-  ListenAddresses = ["/ip4/host_ip/tcp/23333", "/ip6/::/tcp/23333"]
-  AnnounceAddresses = ["/ip4/public_ip/tcp/23333"]
+  ListenAddresses = ["/ip4/0.0.0.0/tcp/10010", "/ip6/::/tcp/10010"]
+  AnnounceAddresses = ["/ip4/public_ip/tcp/10010"]
 #  NoAnnounceAddresses = []
 #  ConnMgrLow = 150
 #  ConnMgrHigh = 180

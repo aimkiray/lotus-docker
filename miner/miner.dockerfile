@@ -26,7 +26,7 @@ RUN export PATH=$PATH:/usr/local/go/bin:$HOME/.cargo/bin \
     && cd $rep_dir \
     && git fetch --tags --prune \
     && git checkout tags/$lotus_ver \
-    && env RUSTFLAGS='-C target-cpu=native -g' FIL_PROOFS_USE_GPU_COLUMN_BUILDER=1 FIL_PROOFS_USE_GPU_TREE_BUILDER=1 FFI_BUILD_FROM_SOURCE=1 make clean && make all
+    && env RUSTFLAGS='-C target-cpu=native -g' FIL_PROOFS_USE_GPU_COLUMN_BUILDER=1 FIL_PROOFS_USE_GPU_TREE_BUILDER=1 FFI_BUILD_FROM_SOURCE=1 make clean && make lotus-miner
 
 FROM gcr.io/distroless/base-debian10
 LABEL maintainer "aimkiray@gmail.com"
@@ -57,7 +57,8 @@ COPY --from=builder /lotus/lotus-miner /usr/local/bin/lotus-miner
 # VOLUME /proofs
 
 # Lotus sync port
-EXPOSE 2333
+EXPOSE 10086
+EXPOSE 10010
 
 ENTRYPOINT ["tini", "--"]
 
