@@ -1,6 +1,7 @@
 #!/bin/bash
 
 img_name=lotus-miner
+daemon_dir=/data2/lotus/lotus-daemon
 run_dir=/data2/lotus/$img_name
 
 docker container rm $img_name -f
@@ -21,5 +22,6 @@ docker run \
     -p 2333:2333 \
     --ulimit nofile=1048576:1048576 \
     -v $run_dir:/lotus/$img_name \
+    -v $daemon_dir:/lotus/lotus-daemon \
     -v /data2/proofs/QmQG9NGWDUMb2WbAiGWkhT1WyZzSaYQQZBUgBxSbRXoqTt:/proofs \
     aimkiray/$img_name:latest
