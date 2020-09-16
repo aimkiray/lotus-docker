@@ -32,7 +32,7 @@ FROM gcr.io/distroless/base-debian10
 LABEL maintainer "aimkiray@gmail.com"
 
 ENV FIL_PROOFS_PARAMETER_CACHE=/proofs
-ENV LOTUS_PATH=/lotus/daemon
+ENV LOTUS_PATH=/lotus/lotus-daemon
 ENV RUST_LOG=Info
 
 # Required libs

@@ -1,6 +1,6 @@
 # Default config:
 [API]
-ListenAddress = "/ip4/0.0.0.0/tcp/2333/http"
+ListenAddress = "/ip4/host_ip/tcp/2333/http"
 #  RemoteListenAddress = ""
 #  Timeout = "30s"
 #
