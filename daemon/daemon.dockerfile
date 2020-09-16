@@ -35,10 +35,6 @@ ENV FIL_PROOFS_PARAMETER_CACHE=/proofs
 ENV LOTUS_PATH=/lotus/daemon
 ENV RUST_LOG=Info
 
-# Lotus home && proofs (optional)
-# VOLUME /lotus
-# VOLUME /proofs
-
 # Required libs
 COPY --from=builder /lib/x86_64-linux-gnu/libgcc_s.so.1 /lib/libgcc_s.so.1
 COPY --from=builder /lib/x86_64-linux-gnu/libdl-2.27.so /lib/libdl.so.2
@@ -49,8 +45,12 @@ COPY --from=builder /usr/lib/x86_64-linux-gnu/libOpenCL.so.1 /lib/libOpenCL.so.1
 # PID1 tini
 COPY --from=builder /file/tini /usr/local/bin/tini
 
-# Lotus bin
+# Lotus bin & config
 COPY --from=builder /lotus/lotus /usr/local/bin/lotus
+
+# Lotus home && proofs (optional)
+# VOLUME /lotus
+# VOLUME /proofs
 
 # Lotus sync port
 EXPOSE 2333
