@@ -17,3 +17,7 @@ docker build \
     --network host \
     -f $target.dockerfile \
     .
+
+docker login --username $docker_name --password $docker_pass
+docker push aimkiray/$img_name:$lotus_version
+docker push aimkiray/$img_name:latest
