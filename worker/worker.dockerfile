@@ -61,4 +61,4 @@ EXPOSE 6666
 ENTRYPOINT ["tini", "--"]
 
 # Run lotus daemon
-CMD ["lotus-worker", "run"， "--address", "0.0.0.0:6666"]
+CMD ["lotus-worker", "run", "--address", "0.0.0.0:6666"]
