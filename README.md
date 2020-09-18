@@ -1,6 +1,6 @@
 # 食用指南
 
-自动化编译打包请使用 `daemon/daemon.dockerfile`。
+自动化编译打包请使用 `daemon/daemon.dockerfile`，daemon 的编译和运行方法也在 daemon 目录下，miner 和 worker 同理。
 
 手动构建时的目录结构如下所示。
 
