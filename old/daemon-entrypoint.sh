@@ -1,8 +1,4 @@
 #!/bin/sh
-# $0 is a script name
-# $1 is command
-# $2, $3 etc are passed arguments
-# $@ are all arguments
 
 export FIL_PROOFS_PARAMETER_CACHE=/proofs
 export LOTUS_PATH=/lotus/daemon
@@ -16,13 +12,13 @@ case "$1" in
   ;;
 
 "start")
+  # Customize lotus listen address and port
   sed -i 's/\#  ListenAddress = "\/ip4\/127.0.0.1\/tcp\/1234\/http"/ListenAddress = "\/ip4\/0.0.0.0\/tcp\/1234\/http"/g' $LOTUS_PATH/config.toml
   export RUST_LOG=Info
   exec lotus daemon
   ;;
 
 *)
-  # Run custom command
   exec $@
   ;;
 esac

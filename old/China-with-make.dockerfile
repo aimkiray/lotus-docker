@@ -21,7 +21,7 @@ ENV git_url=https://raw.excited.workers.dev/https://github.com
 ENV raw_url=https://raw.excited.workers.dev/https://raw.githubusercontent.com
 ENV lotus_rep=${git_url}/filecoin-project/lotus.git
 ENV branch=master
-ENV git_tag=v0.7.0
+ENV lotus_ver=v0.7.0
 ENV GOPROXY=https://goproxy.cn,direct
 
 ENV tini_url=${git_url}/krallin/tini/releases/download/v0.19.0/tini
@@ -40,7 +40,7 @@ RUN export PATH=$PATH:/usr/local/go/bin:$HOME/.cargo/bin \
     && git clone --depth=1 -b $branch $lotus_rep lotus \
     && cd lotus \
     && git fetch --tags --prune \
-    && git checkout tags/$git_tag \
+    && git checkout tags/$lotus_ver \
     && sed -i "s#https://github.com#${git_url}#g" .gitmodules \
     && env RUSTFLAGS='-C target-cpu=native -g' FIL_PROOFS_USE_GPU_COLUMN_BUILDER=1 FIL_PROOFS_USE_GPU_TREE_BUILDER=1 FFI_BUILD_FROM_SOURCE=1 make clean && make all
 

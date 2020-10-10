@@ -16,7 +16,7 @@ RUN curl -sSf https://sh.rustup.rs | sh -s -- -y
 
 ENV lotus_rep=https://github.com/filecoin-project/lotus.git
 ENV branch=master
-ENV git_tag=v0.7.0
+ENV lotus_ver=v0.7.0
 ENV rep_dir=lotus
 
 RUN curl -sOL https://github.com/krallin/tini/releases/download/v0.19.0/tini \
@@ -28,14 +28,11 @@ RUN export PATH=$PATH:/usr/local/go/bin:$HOME/.cargo/bin \
     && git clone --depth=1 -b $branch $lotus_rep $rep_dir \
     && cd $rep_dir \
     && git fetch --tags --prune \
-    && git checkout tags/$git_tag \
+    && git checkout tags/$lotus_ver \
     && env RUSTFLAGS='-C target-cpu=native -g' FIL_PROOFS_USE_GPU_COLUMN_BUILDER=1 FIL_PROOFS_USE_GPU_TREE_BUILDER=1 FFI_BUILD_FROM_SOURCE=1 make clean && make all
 
 FROM busybox:glibc
 LABEL maintainer "aimkiray@gmail.com"
-
-# Certs
-COPY --from=0 /etc/ssl/certs /etc/ssl/certs
 
 # Required libs
 COPY --from=0 /lib/x86_64-linux-gnu/libgcc_s.so.1 /lib/libgcc_s.so.1
