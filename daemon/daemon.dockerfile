@@ -12,14 +12,14 @@ RUN curl -OL https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz \
 
 RUN curl -sSf https://sh.rustup.rs | sh -s -- -y
 
-ENV lotus_rep=https://github.com/filecoin-project/lotus.git
-ENV branch=master
-ENV lotus_ver=v0.7.0
-ENV rep_dir=lotus
-
 RUN mkdir -p /file && cd /file \
     && curl -sOL https://github.com/krallin/tini/releases/download/v0.19.0/tini \
     && chmod +x tini
+
+ENV lotus_rep=https://github.com/filecoin-project/lotus.git
+ENV branch=master
+ENV lotus_ver=v0.9.0
+ENV rep_dir=lotus
 
 RUN export PATH=$PATH:/usr/local/go/bin:$HOME/.cargo/bin \
     && git clone --depth=1 -b $branch $lotus_rep $rep_dir \
@@ -39,8 +39,9 @@ ENV RUST_LOG=Info
 COPY --from=builder /lib/x86_64-linux-gnu/libgcc_s.so.1 /lib/libgcc_s.so.1
 COPY --from=builder /lib/x86_64-linux-gnu/libdl-2.27.so /lib/libdl.so.2
 COPY --from=builder /lib/x86_64-linux-gnu/libutil-2.27.so /lib/libutil.so.1
-COPY --from=builder /lib/x86_64-linux-gnu/librt-2.27.so /lib/librt.so.1 
+COPY --from=builder /lib/x86_64-linux-gnu/librt-2.27.so /lib/librt.so.1
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libOpenCL.so.1 /lib/libOpenCL.so.1
+COPY --from=builder /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /lib/libstdc++.so.6
 
 # PID1 tini
 COPY --from=builder /file/tini /usr/local/bin/tini
